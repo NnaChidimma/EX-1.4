@@ -1,0 +1,40 @@
+import java.util.ArrayList;
+
+public class Stack {
+    private ArrayList<Integer> items;
+
+
+    public Stack() {
+        items = new ArrayList<>();
+    }
+
+
+    public void push(int item) {
+        items.add(item);
+    }
+
+    
+    public String pop() {
+        if (!isEmpty()) {
+            return String.valueOf(items.remove(items.size() - 1));
+        } else {
+            return "Error: Stack is empty";
+        }
+    }
+
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+
+    public static void main(String[] args) {
+        Stack stack = new Stack();
+        stack.push(10);
+        stack.push(20);
+
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+    }
+}
