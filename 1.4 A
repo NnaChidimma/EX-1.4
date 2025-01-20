@@ -1,0 +1,64 @@
+import java.util.Scanner;
+
+public class ArithmeticInterpreter {
+
+    public static double evalExpr(String expr) {
+        return eval(expr.replaceAll("\\s", ""));
+    }
+
+
+    private static double eval(String expr) {
+        if (expr.isEmpty()) {
+            throw new IllegalArgumentException("Expression cannot be empty");
+        }
+
+
+        if (expr.contains("(")) {
+            int open = expr.lastIndexOf("(");
+            int close = expr.indexOf(")", open);
+            if (close == -1) {
+                throw new IllegalArgumentException("Mismatched parentheses");
+            }
+            double innerResult = eval(expr.substring(open + 1, close));
+            expr = expr.substring(0, open) + innerResult + expr.substring(close + 1);
+            return eval(expr);
+        }
+
+
+        for (int i = expr.length() - 1; i >= 0; i--) {
+            char c = expr.charAt(i);
+            if ((c == '+' || c == '-') && i > 0 && !Character.isDigit(expr.charAt(i - 1))) {
+                double left = eval(expr.substring(0, i));
+                double right = eval(expr.substring(i + 1));
+                return c == '+' ? left + right : left - right;
+            }
+        }
+
+
+        for (int i = expr.length() - 1; i >= 0; i--) {
+            char c = expr.charAt(i);
+            if (c == '*' || c == '/') {
+                double left = eval(expr.substring(0, i));
+                double right = eval(expr.substring(i + 1));
+                return c == '*' ? left * right : left / right;
+            }
+        }
+
+        
+        return Double.parseDouble(expr);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter an arithmetic expression: ");
+        String expression = scanner.nextLine();
+
+        try {
+            double result = evalExpr(expression);
+            System.out.println("Result: " + result);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
